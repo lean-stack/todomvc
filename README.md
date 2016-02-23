@@ -13,3 +13,7 @@ Implementierungen der TasteJS Todo-App (https://todomvc.com).
 * jQuery-Clients
 * AngularJS Client
 
+## Anleitung:
+
+1. Leere Solution anlegen
+
