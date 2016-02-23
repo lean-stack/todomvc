@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -14,13 +15,14 @@ namespace TodoMVC.Backend.Controllers
     {
         private TodoDbContext db = new TodoDbContext();
 
-        // GET: MVCTodos
+        // GET: mvc/todos
         public ActionResult Index()
         {
-            return View(db.Todos.ToList());
+            var todos = db.Todos.ToList();
+            return Content(JsonConvert.SerializeObject(todos), "application/json");
         }
 
-        // GET: MVCTodos/Details/5
+        // GET: mvc/todos/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -32,20 +34,11 @@ namespace TodoMVC.Backend.Controllers
             {
                 return HttpNotFound();
             }
-            return View(todo);
+            return Content(JsonConvert.SerializeObject(todo), "application/json");
         }
 
-        // GET: MVCTodos/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: MVCTodos/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: mvc/todos/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Txt,Done")] Todo todo)
         {
             if (ModelState.IsValid)
@@ -55,29 +48,11 @@ namespace TodoMVC.Backend.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View(todo);
+            return Content(JsonConvert.SerializeObject(todo), "application/json");
         }
 
-        // GET: MVCTodos/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Todo todo = db.Todos.Find(id);
-            if (todo == null)
-            {
-                return HttpNotFound();
-            }
-            return View(todo);
-        }
-
-        // POST: MVCTodos/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST:  mvc/todos/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Txt,Done")] Todo todo)
         {
             if (ModelState.IsValid)
@@ -86,33 +61,17 @@ namespace TodoMVC.Backend.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(todo);
+            return Content(JsonConvert.SerializeObject(todo), "application/json");
         }
 
-        // GET: MVCTodos/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Todo todo = db.Todos.Find(id);
-            if (todo == null)
-            {
-                return HttpNotFound();
-            }
-            return View(todo);
-        }
-
-        // POST: MVCTodos/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST:  mvc/todos/Delete/5
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult Delete(int id)
         {
             Todo todo = db.Todos.Find(id);
             db.Todos.Remove(todo);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return Content(JsonConvert.SerializeObject(new { success = true }), "application/json");
         }
 
         protected override void Dispose(bool disposing)

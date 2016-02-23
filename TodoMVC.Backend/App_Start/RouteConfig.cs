@@ -14,6 +14,12 @@ namespace TodoMVC.Backend
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name: "MVCController",
+                url: "mvc/todos/{action}/{id}",
+                defaults: new { action = "Index", id = UrlParameter.Optional, controller = "MVCTodos" }
+            );
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { action = "Index", id = UrlParameter.Optional }
