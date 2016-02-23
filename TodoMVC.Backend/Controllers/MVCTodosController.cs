@@ -39,28 +39,24 @@ namespace TodoMVC.Backend.Controllers
 
         // POST: mvc/todos/Create
         [HttpPost]
-        public ActionResult Create([Bind(Include = "Id,Txt,Done")] Todo todo)
+        public ActionResult Create(string txt)
         {
-            if (ModelState.IsValid)
-            {
-                db.Todos.Add(todo);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+            var todo = new Todo() { Txt = txt };
+            db.Todos.Add(todo);
+            db.SaveChanges();
 
             return Content(JsonConvert.SerializeObject(todo), "application/json");
         }
 
         // POST:  mvc/todos/Edit/5
         [HttpPost]
-        public ActionResult Edit([Bind(Include = "Id,Txt,Done")] Todo todo)
+        public ActionResult Edit(int id, string txt, bool done)
         {
-            if (ModelState.IsValid)
-            {
-                db.Entry(todo).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+            var todo = db.Todos.Find(id);
+            todo.Txt = txt;
+            todo.Done = done;
+            db.SaveChanges();
+
             return Content(JsonConvert.SerializeObject(todo), "application/json");
         }
 
