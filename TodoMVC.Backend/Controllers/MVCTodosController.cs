@@ -61,7 +61,7 @@ namespace TodoMVC.Backend.Controllers
         }
 
         // POST:  mvc/todos/Delete/5
-        [ValidateAntiForgeryToken]
+        [HttpPost]
         public ActionResult Delete(int id)
         {
             Todo todo = db.Todos.Find(id);
